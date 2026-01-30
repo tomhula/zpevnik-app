@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker run --rm -v /home/tomas:/home/tomas musescore:latest "$@"
