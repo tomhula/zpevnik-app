@@ -1,19 +1,9 @@
 package cz.tomashula
 
 import com.github.syari.kgit.KGit
-import org.eclipse.jgit.api.Git
 import java.io.File
 import java.nio.file.Path
-import kotlin.io.path.Path
-import kotlin.io.path.createDirectories
-import kotlin.io.path.createDirectory
-import kotlin.io.path.createTempDirectory
-import kotlin.io.path.deleteIfExists
-import kotlin.io.path.exists
-import kotlin.io.path.extension
-import kotlin.io.path.isDirectory
-import kotlin.io.path.nameWithoutExtension
-import kotlin.io.path.walk
+import kotlin.io.path.*
 
 private val musescorePath = Path.of(System.getenv(EnvVars.MUSESCORE_PATH.name))
 private val outputDir = Path.of(System.getenv(EnvVars.OUTPUT_DIR.name))
@@ -22,10 +12,13 @@ private val repoBranch = System.getenv(EnvVars.REPO_BRANCH.name)
 
 fun main()
 {
-    val tempDir = createTempDirectory()
-    cloneRepoRoot(repoUrl, repoBranch, tempDir)
     clearDirectory(outputDir)
-    convertDir(tempDir, outputDir)
+    val srcDir = outputDir.resolve("src")
+    val renderDir = outputDir.resolve("render")
+    srcDir.createDirectories()
+    renderDir.createDirectories()
+    cloneRepoRoot(repoUrl, repoBranch, srcDir)
+    convertDir(srcDir, renderDir)
 }
 
 private fun cloneRepoRoot(repoUrl: String, repoBranch: String, destination: Path)
@@ -79,7 +72,7 @@ private fun clearDirectory(directory: Path)
     if (!directory.isDirectory())
         return
     
-    directory.walk().forEach { it.deleteIfExists() }
+    directory.walk(PathWalkOption.INCLUDE_DIRECTORIES).forEach { it.deleteIfExists() }
 }
 
 enum class EnvVars 

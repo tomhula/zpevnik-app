@@ -5,6 +5,6 @@ build/
 !**/src/test/**/build/
 
 scores/
-
+output/
 ### IntelliJ IDEA ###
 .idea/
