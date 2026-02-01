@@ -6,7 +6,7 @@ import java.nio.file.Path
 import kotlin.io.path.*
 
 class Generator(
-    private val musescoreExecutable: Path,
+    private val musescoreExecutable: String,
     private val repoUrl: String,
     private val repoBranch: String,
     private val outputDir: Path
@@ -47,7 +47,7 @@ class Generator(
 
     private fun runMusescore(args: Array<String>)
     {
-        val process = ProcessBuilder(musescoreExecutable.toString(), *args).start()
+        val process = ProcessBuilder(musescoreExecutable, *args).start()
         process.waitFor()
     }
 

@@ -5,9 +5,7 @@ import kotlin.io.path.*
 
 fun main()
 {
-    val musescoreExecutable = Path(requireEnvVar(EnvVar.MUSESCORE_EXECUTABLE))
-    if (!musescoreExecutable.exists()) 
-        error("Missing musescore executable: $musescoreExecutable")
+    val musescoreExecutable = requireEnvVar(EnvVar.MUSESCORE_EXECUTABLE)
     val outputDir = Path(requireEnvVar(EnvVar.OUTPUT_DIR))
     val repoUrl = requireEnvVar(EnvVar.REPO_URL)
     val repoBranch = requireEnvVar(EnvVar.REPO_BRANCH)
