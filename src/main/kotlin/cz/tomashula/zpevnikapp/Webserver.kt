@@ -1,6 +1,7 @@
 package cz.tomashula.zpevnikapp
 
 import freemarker.cache.ClassTemplateLoader
+import io.ktor.http.HttpHeaders
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
 import io.ktor.server.engine.embeddedServer
@@ -12,6 +13,7 @@ import io.ktor.server.response.respond
 import io.ktor.server.response.respondPath
 import io.ktor.server.routing.get
 import io.ktor.server.routing.routing
+import kotlin.io.path.name
 
 class Webserver(
     private val songs: List<SongFile>,
@@ -62,12 +64,14 @@ class Webserver(
             get("/song/{name}/musescore") {
                 val name = call.parameters["name"] ?: return@get
                 val songFile = songs.find { it.name == name } ?: return@get
+                call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.musescore.name}\"")
                 call.respondPath(songFile.musescore)
             }
             
             get("/song/{name}/pdf") {
                 val name = call.parameters["name"] ?: return@get
                 val songFile = songs.find { it.name == name } ?: return@get
+                call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.pdf.name}\"")
                 call.respondPath(songFile.pdf)
             }
             
@@ -75,8 +79,9 @@ class Webserver(
                 val name = call.parameters["name"] ?: return@get
                 val index = call.parameters["index"]?.toIntOrNull() ?: return@get
                 val songFile = songs.find { it.name == name } ?: return@get
-                val image = songFile.images.getOrNull(index) ?: return@get
-                call.respondPath(image)
+                val imageFile = songFile.images.getOrNull(index) ?: return@get
+                call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${imageFile.name}\"")
+                call.respondPath(imageFile)
             }
         }
     }
