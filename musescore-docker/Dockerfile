@@ -13,18 +13,18 @@ RUN set -eux; \
         ca-certificates \
         tini \
         xvfb \
-        libasound2 \
+        libasound2t64 \
         libdbus-1-3 \
         libegl1 \
         libfontconfig1 \
         libgl1 \
-        libglib2.0-0 \
+        libglib2.0-0t64 \
         libglx0 \
         libice6 \
         libjack-jackd2-0 \
         libnss3 \
         libopengl0 \
-        libpipewire-0.3-0 \
+        libpipewire-0.3-0t64 \
         libsm6 \
         libx11-6 \
         libxcb1 \
@@ -47,7 +47,6 @@ RUN set -eux; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
 
-RUN useradd -m musescore
-USER musescore
+USER ubuntu
 
 ENTRYPOINT ["tini", "--", "musescore"]
