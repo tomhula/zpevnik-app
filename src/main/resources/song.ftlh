@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zpěvník</title>
-    <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="/static/song.css">
+    <link rel="stylesheet" href="${subpath}/static/styles.css">
+    <link rel="stylesheet" href="${subpath}/static/song.css">
 </head>
 <body>
 
@@ -15,7 +15,7 @@
 
 <div class="container">
     <div class="back-nav">
-        <a href="/" class="back-link">← Zpět na seznam písniček</a>
+        <a href="${subpath}/" class="back-link">← Zpět na seznam písniček</a>
     </div>
 
     <article class="song-paper">

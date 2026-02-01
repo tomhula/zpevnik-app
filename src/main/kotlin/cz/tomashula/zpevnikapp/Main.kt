@@ -5,15 +5,16 @@ import kotlin.io.path.*
 
 fun main()
 {
-    val musescoreExecutable = Path(getEnvVar(EnvVar.MUSESCORE_EXECUTABLE))
+    val musescoreExecutable = Path(requireEnvVar(EnvVar.MUSESCORE_EXECUTABLE))
     if (!musescoreExecutable.exists()) 
         error("Missing musescore executable: $musescoreExecutable")
-    val outputDir = Path(getEnvVar(EnvVar.OUTPUT_DIR))
-    val repoUrl = getEnvVar(EnvVar.REPO_URL)
-    val repoBranch = getEnvVar(EnvVar.REPO_BRANCH)
-    val host = getEnvVar(EnvVar.HOST)
-    val portStr = getEnvVar(EnvVar.PORT)
+    val outputDir = Path(requireEnvVar(EnvVar.OUTPUT_DIR))
+    val repoUrl = requireEnvVar(EnvVar.REPO_URL)
+    val repoBranch = requireEnvVar(EnvVar.REPO_BRANCH)
+    val host = requireEnvVar(EnvVar.HOST)
+    val portStr = requireEnvVar(EnvVar.PORT)
     val port = portStr.toIntOrNull() ?: error("Invalid port: $portStr")
+    val subpath = getEnvVar(EnvVar.SUBPATH) ?: ""
     
     val generator = Generator(
         musescoreExecutable = musescoreExecutable,
@@ -25,12 +26,15 @@ fun main()
     val webserver = Webserver(
         songs = songFiles,
         host = host,
-        port = port
+        port = port,
+        subpath = subpath
     )
     webserver.start()
 }
 
-private fun getEnvVar(envVar: EnvVar): String = System.getenv(envVar.name) ?: error("Missing env var: ${envVar.name}")
+private fun requireEnvVar(envVar: EnvVar) = getEnvVar(envVar) ?: error("Missing env var: ${envVar.name}")
+
+private fun getEnvVar(envVar: EnvVar): String? = System.getenv(envVar.name)
 
 enum class EnvVar 
 {
@@ -39,5 +43,6 @@ enum class EnvVar
     REPO_URL,
     REPO_BRANCH,
     HOST,
-    PORT
+    PORT,
+    SUBPATH
 }

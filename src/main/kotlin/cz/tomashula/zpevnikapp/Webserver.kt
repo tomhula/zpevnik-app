@@ -11,16 +11,21 @@ import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondPath
+import io.ktor.server.routing.IgnoreTrailingSlash
 import io.ktor.server.routing.get
+import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import kotlin.io.path.name
 
 class Webserver(
     private val songs: List<SongFile>,
     private val port: Int,
-    private val host: String
+    private val host: String,
+    private val subpath: String
 )
 {
+    private val normalizedSubpath = subpath.trim('/').let { if (it.isEmpty()) "" else "/$it" }
+
     fun start()
     {
         println("Starting webserver on $host:$port")
@@ -40,54 +45,59 @@ class Webserver(
         install(FreeMarker) {
             templateLoader = ClassTemplateLoader(this::class.java.classLoader, "/")
         }
+        install(IgnoreTrailingSlash)
 
         routing {
-            staticResources("/static", "/static", index = null)
+            route(normalizedSubpath) {
+                staticResources("/static", "/static", index = null)
 
-            get("/") {
-                call.respond(FreeMarkerContent("index.ftlh", songs.toIndexModel()))
-            }
+                get {
+                    call.respond(FreeMarkerContent("index.ftlh", songs.toIndexModel()))
+                }
 
-            get("/song/{name}") {
-                val name = call.parameters["name"] ?: return@get
-                val songFile = songs.find { it.name == name } ?: return@get
+                get("/song/{name}") {
+                    val name = call.parameters["name"] ?: return@get
+                    val songFile = songs.find { it.name == name } ?: return@get
 
-                val model = SongModel(
-                    imageUrls = songFile.images.indices.map { index -> "/song/${songFile.name}/image/$index" },
-                    musescoreUrl = "/song/${songFile.name}/musescore",
-                    pdfUrl = "/song/${songFile.name}/pdf"
-                )
-                call.respond(FreeMarkerContent("song.ftlh", model))
-            }
-            
-            get("/song/{name}/musescore") {
-                val name = call.parameters["name"] ?: return@get
-                val songFile = songs.find { it.name == name } ?: return@get
-                call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.musescore.name}\"")
-                call.respondPath(songFile.musescore)
-            }
-            
-            get("/song/{name}/pdf") {
-                val name = call.parameters["name"] ?: return@get
-                val songFile = songs.find { it.name == name } ?: return@get
-                call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.pdf.name}\"")
-                call.respondPath(songFile.pdf)
-            }
-            
-            get("/song/{name}/image/{index}") {
-                val name = call.parameters["name"] ?: return@get
-                val index = call.parameters["index"]?.toIntOrNull() ?: return@get
-                val songFile = songs.find { it.name == name } ?: return@get
-                val imageFile = songFile.images.getOrNull(index) ?: return@get
-                call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${imageFile.name}\"")
-                call.respondPath(imageFile)
+                    val model = SongModel(
+                        imageUrls = songFile.images.indices.map { index -> "$normalizedSubpath/song/${songFile.name}/image/$index" },
+                        musescoreUrl = "$normalizedSubpath/song/${songFile.name}/musescore",
+                        pdfUrl = "$normalizedSubpath/song/${songFile.name}/pdf",
+                        subpath = normalizedSubpath
+                    )
+                    call.respond(FreeMarkerContent("song.ftlh", model))
+                }
+
+                get("/song/{name}/musescore") {
+                    val name = call.parameters["name"] ?: return@get
+                    val songFile = songs.find { it.name == name } ?: return@get
+                    call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.musescore.name}\"")
+                    call.respondPath(songFile.musescore)
+                }
+
+                get("/song/{name}/pdf") {
+                    val name = call.parameters["name"] ?: return@get
+                    val songFile = songs.find { it.name == name } ?: return@get
+                    call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.pdf.name}\"")
+                    call.respondPath(songFile.pdf)
+                }
+
+                get("/song/{name}/image/{index}") {
+                    val name = call.parameters["name"] ?: return@get
+                    val index = call.parameters["index"]?.toIntOrNull() ?: return@get
+                    val songFile = songs.find { it.name == name } ?: return@get
+                    val imageFile = songFile.images.getOrNull(index) ?: return@get
+                    call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${imageFile.name}\"")
+                    call.respondPath(imageFile)
+                }
             }
         }
     }
     
     private fun List<SongFile>.toIndexModel() = IndexModel(
-        songs = map { it.toIndexModelSong() }
+        songs = map { it.toIndexModelSong() },
+        subpath = normalizedSubpath
     )
     
-    private fun SongFile.toIndexModelSong() = IndexModel.Song(name, "song/$name")
+    private fun SongFile.toIndexModelSong() = IndexModel.Song(name, "$normalizedSubpath/song/$name")
 }

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Můj Online Zpěvník - Seznam</title>
-    <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="/static/index.css">
+    <link rel="stylesheet" href="${subpath}/static/styles.css">
+    <link rel="stylesheet" href="${subpath}/static/index.css">
 </head>
 <body>
 
