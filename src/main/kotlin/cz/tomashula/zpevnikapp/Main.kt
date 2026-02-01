@@ -22,7 +22,7 @@ fun main()
         repoBranch = repoBranch,
         outputDir = outputDir
     )
-    val songFiles = generator.generate()
+    val songFiles = generator.generate().sortedBy { it.name }
     val webserver = Webserver(
         songs = songFiles,
         port = port,

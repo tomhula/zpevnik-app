@@ -15,6 +15,9 @@ dependencies {
     implementation(libs.ktor.server.netty)
     implementation(libs.ktor.server.freemarker)
     implementation(libs.kgit)
+    implementation(libs.kotlinLogging)
+    implementation(libs.slf4j.simple)
+    // implementation(libs.logback.classic)
 }
 
 application {

@@ -2,12 +2,18 @@
 kotlin = "2.3.0"
 ktor = "3.4.0"
 kgit = "1.1.0"
+kotlin-logging = "7.0.14"
+logback = "1.5.16"
+slf4j = "2.0.17"
 
 [libraries]
 ktor-server-core = { module = "io.ktor:ktor-server-core", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
 ktor-server-freemarker = { module = "io.ktor:ktor-server-freemarker", version.ref = "ktor" }
 kgit = { module = "com.github.sya-ri:kgit", version.ref = "kgit" }
+kotlinLogging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
+logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
 
 [plugins]
 kotlin-jvm-plugin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }

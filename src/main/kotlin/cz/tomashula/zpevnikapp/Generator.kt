@@ -1,5 +1,6 @@
 package cz.tomashula.zpevnikapp
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import com.github.syari.kgit.KGit
 import java.nio.file.Path
 import kotlin.io.path.*
@@ -11,6 +12,8 @@ class Generator(
     private val outputDir: Path
 )
 {
+    private val logger = KotlinLogging.logger {}
+
     @OptIn(ExperimentalPathApi::class)
     fun generate(): List<SongFile>
     {
@@ -50,7 +53,7 @@ class Generator(
 
     private fun convert(input: Path, output: Path)
     {
-        println("Converting $input to $output")
+        logger.info { "Converting $input to $output" }
         runMusescore(arrayOf("--export-to", output.toString(), input.toString()))
     }
 

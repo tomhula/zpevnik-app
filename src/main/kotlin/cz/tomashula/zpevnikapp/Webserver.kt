@@ -1,5 +1,6 @@
 package cz.tomashula.zpevnikapp
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import freemarker.cache.ClassTemplateLoader
 import io.ktor.http.HttpHeaders
 import io.ktor.server.application.Application
@@ -27,13 +28,12 @@ class Webserver(
     subpath: String
 )
 {
+    private val logger = KotlinLogging.logger {}
     private val normalizedSubpath = subpath.trim('/').let { if (it.isEmpty()) "" else "/$it" }
 
     fun start()
     {
-        println("Starting webserver on $host:$port")
-        println("Songs:")
-        songs.forEach { println(it) }
+        logger.info { "Songs: ${songs.joinToString { it.name }}" }
         
         embeddedServer(
             factory = Netty,
