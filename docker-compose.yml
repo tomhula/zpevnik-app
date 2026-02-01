@@ -1,0 +1,15 @@
+services:
+  zpevnik:
+    build: .
+    environment:
+      MUSESCORE_EXECUTABLE: "musescore"
+      OUTPUT_DIR: "/output"
+      REPO_URL: ""
+      REPO_BRANCH: "main"
+      HOST: "0.0.0.0"
+      PORT: "8080"
+      SUBPATH: ""
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./output:/output
