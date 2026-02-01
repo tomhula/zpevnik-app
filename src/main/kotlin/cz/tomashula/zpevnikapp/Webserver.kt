@@ -55,7 +55,6 @@ class Webserver(
                 val model = SongModel(
                     imageUrls = songFile.images.indices.map { index -> "/song/${songFile.name}/image/$index" },
                     musescoreUrl = "/song/${songFile.name}/musescore",
-                    imagesUrl = "/",
                     pdfUrl = "/song/${songFile.name}/pdf"
                 )
                 call.respond(FreeMarkerContent("song.ftlh", model))

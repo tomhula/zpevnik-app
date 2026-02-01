@@ -36,9 +36,6 @@
                 <a href="${pdfUrl}" class="btn btn-pdf" download>
                     PDF verze
                 </a>
-                <a href="${imagesUrl}" class="btn btn-png" download>
-                    Obrázky (ZIP/PNG)
-                </a>
             </div>
         </div>
     </article>
