@@ -42,7 +42,7 @@ class Webserver(
         }
 
         routing {
-            staticResources("/", "/", index = null)
+            staticResources("/static", "/static", index = null)
 
             get("/") {
                 call.respond(FreeMarkerContent("index.ftlh", songs.toIndexModel()))
