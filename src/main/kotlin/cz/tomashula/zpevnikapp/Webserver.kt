@@ -11,17 +11,20 @@ import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondPath
+import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.IgnoreTrailingSlash
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import kotlinx.coroutines.launch
 import kotlin.io.path.name
 
 class Webserver(
     private val songs: List<SongFile>,
     private val port: Int,
     private val host: String,
-    private val subpath: String
+    private val onRefresh: () -> Unit = {},
+    subpath: String
 )
 {
     private val normalizedSubpath = subpath.trim('/').let { if (it.isEmpty()) "" else "/$it" }
@@ -53,6 +56,11 @@ class Webserver(
 
                 get {
                     call.respond(FreeMarkerContent("index.ftlh", songs.toIndexModel()))
+                }
+                
+                get("/refresh") {
+                    onRefresh()
+                    call.respondRedirect("/$normalizedSubpath")
                 }
 
                 get("/song/{name}") {

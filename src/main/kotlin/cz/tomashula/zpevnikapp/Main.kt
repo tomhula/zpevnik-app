@@ -25,9 +25,10 @@ fun main()
     val songFiles = generator.generate()
     val webserver = Webserver(
         songs = songFiles,
-        host = host,
         port = port,
-        subpath = subpath
+        host = host,
+        subpath = subpath,
+        onRefresh = generator::generate
     )
     webserver.start()
 }
