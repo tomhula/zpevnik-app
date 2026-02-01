@@ -62,41 +62,43 @@ class Webserver(
                     onRefresh()
                     call.respondRedirect("/$normalizedSubpath")
                 }
+                
+                route("/song/{name}") {
+                    get {
+                        val name = call.parameters["name"] ?: return@get
+                        val songFile = songs.find { it.name == name } ?: return@get
 
-                get("/song/{name}") {
-                    val name = call.parameters["name"] ?: return@get
-                    val songFile = songs.find { it.name == name } ?: return@get
+                        val model = SongModel(
+                            imageUrls = songFile.images.indices.map { index -> "$normalizedSubpath/song/${songFile.name}/image/$index" },
+                            musescoreUrl = "$normalizedSubpath/song/${songFile.name}/musescore",
+                            pdfUrl = "$normalizedSubpath/song/${songFile.name}/pdf",
+                            subpath = normalizedSubpath
+                        )
+                        call.respond(FreeMarkerContent("song.ftlh", model))
+                    }
 
-                    val model = SongModel(
-                        imageUrls = songFile.images.indices.map { index -> "$normalizedSubpath/song/${songFile.name}/image/$index" },
-                        musescoreUrl = "$normalizedSubpath/song/${songFile.name}/musescore",
-                        pdfUrl = "$normalizedSubpath/song/${songFile.name}/pdf",
-                        subpath = normalizedSubpath
-                    )
-                    call.respond(FreeMarkerContent("song.ftlh", model))
-                }
+                    get("/musescore") {
+                        val name = call.parameters["name"] ?: return@get
+                        val songFile = songs.find { it.name == name } ?: return@get
+                        call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.musescore.name}\"")
+                        call.respondPath(songFile.musescore)
+                    }
 
-                get("/song/{name}/musescore") {
-                    val name = call.parameters["name"] ?: return@get
-                    val songFile = songs.find { it.name == name } ?: return@get
-                    call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.musescore.name}\"")
-                    call.respondPath(songFile.musescore)
-                }
+                    get("/pdf") {
+                        val name = call.parameters["name"] ?: return@get
+                        val songFile = songs.find { it.name == name } ?: return@get
+                        call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.pdf.name}\"")
+                        call.respondPath(songFile.pdf)
+                    }
 
-                get("/song/{name}/pdf") {
-                    val name = call.parameters["name"] ?: return@get
-                    val songFile = songs.find { it.name == name } ?: return@get
-                    call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.pdf.name}\"")
-                    call.respondPath(songFile.pdf)
-                }
-
-                get("/song/{name}/image/{index}") {
-                    val name = call.parameters["name"] ?: return@get
-                    val index = call.parameters["index"]?.toIntOrNull() ?: return@get
-                    val songFile = songs.find { it.name == name } ?: return@get
-                    val imageFile = songFile.images.getOrNull(index) ?: return@get
-                    call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${imageFile.name}\"")
-                    call.respondPath(imageFile)
+                    get("/image/{index}") {
+                        val name = call.parameters["name"] ?: return@get
+                        val index = call.parameters["index"]?.toIntOrNull() ?: return@get
+                        val songFile = songs.find { it.name == name } ?: return@get
+                        val imageFile = songFile.images.getOrNull(index) ?: return@get
+                        call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${imageFile.name}\"")
+                        call.respondPath(imageFile)
+                    }
                 }
             }
         }
