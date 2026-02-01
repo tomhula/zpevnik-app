@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
     fontconfig \
     && rm -rf /var/lib/apt/lists/*
 
-USER musescore 
+USER ubuntu 
 
 COPY --from=build /app/build/libs/app.jar app.jar
 
