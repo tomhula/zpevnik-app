@@ -11,6 +11,9 @@ fun main()
     val outputDir = Path(getEnvVar(EnvVar.OUTPUT_DIR))
     val repoUrl = getEnvVar(EnvVar.REPO_URL)
     val repoBranch = getEnvVar(EnvVar.REPO_BRANCH)
+    val host = getEnvVar(EnvVar.HOST)
+    val portStr = getEnvVar(EnvVar.PORT)
+    val port = portStr.toIntOrNull() ?: error("Invalid port: $portStr")
     
     val generator = Generator(
         musescoreExecutable = musescoreExecutable,
@@ -21,8 +24,8 @@ fun main()
     val songFiles = generator.generate()
     val webserver = Webserver(
         songs = songFiles,
-        host = "0.0.0.0",
-        port = 8080
+        host = host,
+        port = port
     )
     webserver.start()
 }
@@ -34,5 +37,7 @@ enum class EnvVar
     MUSESCORE_EXECUTABLE,
     OUTPUT_DIR,
     REPO_URL,
-    REPO_BRANCH
+    REPO_BRANCH,
+    HOST,
+    PORT
 }
