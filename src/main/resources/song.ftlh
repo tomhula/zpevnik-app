@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>${title} - Zpěvník</title>
+    <title>Zpěvník</title>
     <link rel="stylesheet" href="../styles.css">
     <link rel="stylesheet" href="../song.css">
 </head>
@@ -22,7 +22,7 @@
         <!-- Vertikální galerie obrázků s notami a textem -->
         <div class="notes-gallery">
             <#list imageUrls as imageUrl>
-                <img src="${imageUrl}" alt="${title} - Noty ${imageUrl?index + 1}" class="notes-image">
+                <img src="${imageUrl}" alt="${imageUrl} - Noty ${imageUrl?index + 1}" class="notes-image">
             </#list>
         </div>
 
