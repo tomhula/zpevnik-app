@@ -1,0 +1,81 @@
+header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Search Bar */
+.search-container {
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+
+/* Song List */
+.song-list {
+    list-style: none;
+    padding: 0;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.song-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.song-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background 0.2s;
+}
+
+.song-item:last-child {
+    border-bottom: none;
+}
+
+.song-link:hover .song-item {
+    background-color: #fff5eb;
+}
+
+.song-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+}
+
+.song-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.arrow {
+    color: #ccc;
+    font-size: 1.2rem;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.song-link:hover .arrow {
+    color: var(--accent-color);
+    transform: translateX(5px);
+}
