@@ -1,4 +1,4 @@
-package cz.tomashula.zpevnikapp
+package io.github.tomhula
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import com.github.syari.kgit.KGit

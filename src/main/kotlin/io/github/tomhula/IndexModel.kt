@@ -1,4 +1,4 @@
-package cz.tomashula.zpevnikapp
+package io.github.tomhula
 
 data class IndexModel(
     val songs: List<Song>,

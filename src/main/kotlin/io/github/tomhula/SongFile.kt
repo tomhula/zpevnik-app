@@ -1,4 +1,4 @@
-package cz.tomashula.zpevnikapp
+package io.github.tomhula
 
 import java.nio.file.Path
 

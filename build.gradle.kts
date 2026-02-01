@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.ktor.plugin)
 }
 
-group = "cz.tomashula"
+group = "io.github.tomhula"
 version = "1.0-SNAPSHOT"
 
 repositories {

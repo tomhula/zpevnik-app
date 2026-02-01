@@ -1,4 +1,4 @@
-package cz.tomashula.zpevnikapp
+package io.github.tomhula
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import freemarker.cache.ClassTemplateLoader
@@ -17,7 +17,6 @@ import io.ktor.server.routing.IgnoreTrailingSlash
 import io.ktor.server.routing.get
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import kotlinx.coroutines.launch
 import kotlin.io.path.name
 
 class Webserver(

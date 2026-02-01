@@ -1,4 +1,4 @@
-package cz.tomashula.zpevnikapp
+package io.github.tomhula
 
 data class SongModel(
     val imageUrls: List<String>,
