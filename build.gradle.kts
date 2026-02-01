@@ -21,7 +21,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("cz.tomashula.MainKt")
+    mainClass.set("io.github.tomhula.MainKt")
 }
 
 kotlin {
