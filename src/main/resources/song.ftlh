@@ -19,10 +19,6 @@
     </div>
 
     <article class="song-paper">
-        <div class="song-header">
-            <h2>${title}</h2>
-        </div>
-
         <!-- Vertikální galerie obrázků s notami a textem -->
         <div class="notes-gallery">
             <#list imageUrls as imageUrl>

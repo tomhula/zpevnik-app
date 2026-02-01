@@ -49,10 +49,8 @@ class Webserver(
             get("/song/{name}") {
                 val name = call.parameters["name"] ?: return@get
                 val songFile = songs.find { it.name == name } ?: return@get
-                val title = songFile.name
 
                 val model = SongModel(
-                    title = title,
                     imageUrls = songFile.images.indices.map { index -> "/song/${songFile.name}/image/$index" },
                     musescoreUrl = "/song/${songFile.name}/musescore",
                     imagesUrl = "/",
