@@ -10,7 +10,7 @@
 <body>
 
 <header>
-    <h1>Online Zpěvník</h1>
+    <h1>Tomův Zpěvník</h1>
 </header>
 
 <div class="container">
