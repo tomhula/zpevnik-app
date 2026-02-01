@@ -5,12 +5,12 @@ import kotlin.io.path.*
 
 fun main()
 {
-    val musescoreExecutable = Path(getEnvVar(EnvVars.MUSESCORE_EXECUTABLE.name))
+    val musescoreExecutable = Path(getEnvVar(EnvVar.MUSESCORE_EXECUTABLE))
     if (!musescoreExecutable.exists()) 
         error("Missing musescore executable: $musescoreExecutable")
-    val outputDir = Path(getEnvVar(EnvVars.OUTPUT_DIR.name))
-    val repoUrl = getEnvVar(EnvVars.REPO_URL.name)
-    val repoBranch = getEnvVar(EnvVars.REPO_BRANCH.name)
+    val outputDir = Path(getEnvVar(EnvVar.OUTPUT_DIR))
+    val repoUrl = getEnvVar(EnvVar.REPO_URL)
+    val repoBranch = getEnvVar(EnvVar.REPO_BRANCH)
     
     val generator = Generator(
         musescoreExecutable = musescoreExecutable,
@@ -27,9 +27,9 @@ fun main()
     webserver.start()
 }
 
-private fun getEnvVar(name: String): String = System.getenv(name) ?: error("Missing env var: $name")
+private fun getEnvVar(envVar: EnvVar): String = System.getenv(envVar.name) ?: error("Missing env var: ${envVar.name}")
 
-enum class EnvVars 
+enum class EnvVar 
 {
     MUSESCORE_EXECUTABLE,
     OUTPUT_DIR,
