@@ -17,7 +17,8 @@ class Generator(
     @OptIn(ExperimentalPathApi::class)
     fun generate(): List<SongFile>
     {
-        outputDir.deleteRecursively()
+        if (outputDir.exists())
+            outputDir.forEach { it.deleteRecursively() }
         val srcDir = outputDir.resolve("src").also { it.createDirectories() }
         val renderDir = outputDir.resolve("render").also { it.createDirectories() }
         cloneRepo(srcDir)
