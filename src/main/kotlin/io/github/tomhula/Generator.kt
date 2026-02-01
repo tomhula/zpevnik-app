@@ -62,8 +62,8 @@ class Generator(
         val songs = mutableListOf<SongFile>()
         
         inputDir.walk().filter { it.extension == "mscz" }.forEach { srcFile ->
-            convert(srcFile, outputDir.resolve(srcFile.nameWithoutExtension + ".png")) 
-            val imageFiles = outputDir.walk().filter { it.extension == "png" && it.nameWithoutExtension.startsWith(srcFile.nameWithoutExtension) }.toList()
+            convert(srcFile, outputDir.resolve(srcFile.nameWithoutExtension + ".svg")) 
+            val imageFiles = outputDir.walk().filter { it.extension == "svg" && it.nameWithoutExtension.startsWith(srcFile.nameWithoutExtension) }.toList()
             val pdfFile = outputDir.resolve(srcFile.nameWithoutExtension + ".pdf")
             convert(srcFile, pdfFile)
             songs.add(SongFile(srcFile.nameWithoutExtension, srcFile, imageFiles, pdfFile))
