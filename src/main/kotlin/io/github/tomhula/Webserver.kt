@@ -15,6 +15,7 @@ import io.ktor.server.response.respondPath
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.IgnoreTrailingSlash
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import kotlin.io.path.name
@@ -57,7 +58,7 @@ class Webserver(
                     call.respond(FreeMarkerContent("index.ftlh", songs.toIndexModel()))
                 }
                 
-                get("/refresh") {
+                post("/refresh") {
                     onRefresh()
                     call.respondRedirect("/$normalizedSubpath")
                 }
