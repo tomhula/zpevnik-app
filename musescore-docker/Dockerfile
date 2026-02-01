@@ -5,8 +5,7 @@ ENV LANG=C.UTF-8
 ENV LC_ALL=C.UTF-8
 
 
-WORKDIR /app
-
+WORKDIR /tmp/work
 
 RUN set -eux; \
     apt-get update; \
@@ -34,17 +33,16 @@ RUN set -eux; \
         libxrender1 \
         wget \
     ; \
+    # Download and extract to /opt/musescore \
     wget -q -O /tmp/musescore.AppImage "https://cdn.jsdelivr.net/musescore/v4.6.5/MuseScore-Studio-4.6.5.253511702-x86_64.AppImage"; \
     chmod +x /tmp/musescore.AppImage; \
     /tmp/musescore.AppImage --appimage-extract; \
+    mv squashfs-root /opt/musescore; \
     rm -f /tmp/musescore.AppImage; \
-    # Remove desktop integration files (not needed for headless) \
-    rm -rf squashfs-root/usr/share/icons && \
-    rm -rf squashfs-root/usr/share/applications && \
-    rm -rf squashfs-root/usr/share/mime && \
-    # Remove the updater and installer stubs \
-    rm -f squashfs-root/usr/bin/mscore-installer && \
-    mv /app/squashfs-root /musescore; \
+    # Create the wrapper script \
+    echo '#!/bin/bash\nxvfb-run -a -- /opt/musescore/AppRun "$@"' > /usr/local/bin/musescore; \
+    chmod +x /usr/local/bin/musescore; \
+    # Cleanup \
     apt-get purge -y --auto-remove wget; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*
@@ -52,5 +50,4 @@ RUN set -eux; \
 RUN useradd -m musescore
 USER musescore
 
-
-ENTRYPOINT ["tini", "--", "xvfb-run", "-a", "--", "/musescore/AppRun"]
+ENTRYPOINT ["tini", "--", "musescore"]
