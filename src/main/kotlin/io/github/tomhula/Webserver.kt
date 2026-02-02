@@ -21,10 +21,10 @@ import io.ktor.server.routing.routing
 import kotlin.io.path.name
 
 class Webserver(
-    private val songs: List<SongFile>,
+    private var songs: List<SongFile>,
     private val port: Int,
     private val host: String,
-    private val onRefresh: () -> Unit = {},
+    private val onRefresh: () -> List<SongFile> = { songs },
     subpath: String
 )
 {
@@ -59,7 +59,8 @@ class Webserver(
                 }
                 
                 post("/refresh") {
-                    onRefresh()
+                    songs = onRefresh()
+                    logger.info { "Refreshed songs: ${songs.joinToString { it.name }}" }
                     call.respondRedirect("/$normalizedSubpath")
                 }
                 
