@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm.plugin)
     alias(libs.plugins.ktor.plugin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 group = "io.github.tomhula"
@@ -17,6 +18,7 @@ dependencies {
     implementation(libs.kgit)
     implementation(libs.kotlinLogging)
     implementation(libs.slf4j.simple)
+    implementation(libs.kotlinx.serialization.json)
     // implementation(libs.logback.classic)
 }
 

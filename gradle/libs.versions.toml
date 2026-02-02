@@ -1,5 +1,6 @@
 [versions]
 kotlin = "2.3.0"
+kotlinx-serialization = "1.10.0"
 ktor = "3.4.0"
 kgit = "1.1.0"
 kotlin-logging = "7.0.14"
@@ -14,7 +15,9 @@ kgit = { module = "com.github.sya-ri:kgit", version.ref = "kgit" }
 kotlinLogging = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging" }
 logback-classic = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
 slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
 
 [plugins]
 kotlin-jvm-plugin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor-plugin = { id = "io.ktor.plugin", version.ref = "ktor" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
