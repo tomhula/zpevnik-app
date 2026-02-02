@@ -12,10 +12,8 @@ import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondPath
-import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.IgnoreTrailingSlash
 import io.ktor.server.routing.get
-import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import kotlin.io.path.name
@@ -63,6 +61,7 @@ class Webserver(
                         val songFile = songs.find { it.name == name } ?: return@get
 
                         val model = SongModel(
+                            name = songFile.name,
                             imageUrls = songFile.images.indices.map { index -> "$normalizedSubpath/song/${songFile.name}/image/$index" },
                             musescoreUrl = "$normalizedSubpath/song/${songFile.name}/musescore",
                             pdfUrl = "$normalizedSubpath/song/${songFile.name}/pdf",
