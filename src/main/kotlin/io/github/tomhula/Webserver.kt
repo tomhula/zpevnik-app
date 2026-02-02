@@ -22,7 +22,9 @@ class Webserver(
     private var songs: List<SongFile>,
     private val port: Int,
     private val host: String,
-    subpath: String
+    subpath: String,
+    private val sourceUrl: String,
+    private val contactEmail: String?
 )
 {
     private val logger = KotlinLogging.logger {}
@@ -66,7 +68,8 @@ class Webserver(
                             musescoreUrl = "$normalizedSubpath/song/${songFile.name}/musescore",
                             pdfUrl = "$normalizedSubpath/song/${songFile.name}/pdf",
                             soundUrl = "$normalizedSubpath/song/${songFile.name}/sound",
-                            subpath = normalizedSubpath
+                            subpath = normalizedSubpath,
+                            contactEmail = contactEmail
                         )
                         call.respond(FreeMarkerContent("song.ftlh", model))
                     }
@@ -107,7 +110,8 @@ class Webserver(
     
     private fun List<SongFile>.toIndexModel() = IndexModel(
         songs = map { it.toIndexModelSong() },
-        subpath = normalizedSubpath
+        subpath = normalizedSubpath,
+        sourceUrl = sourceUrl
     )
     
     private fun SongFile.toIndexModelSong() = IndexModel.Song(name, "$normalizedSubpath/song/$name")

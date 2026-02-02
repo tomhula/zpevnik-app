@@ -13,6 +13,7 @@ fun main()
     val portStr = requireEnvVar(EnvVar.PORT)
     val port = portStr.toIntOrNull() ?: error("Invalid port: $portStr")
     val subpath = getEnvVar(EnvVar.SUBPATH) ?: ""
+    val contactEmail = getEnvVar(EnvVar.CONTACT_EMAIL)
     
     val generator = Generator(
         musescoreExecutable = musescoreExecutable,
@@ -25,7 +26,9 @@ fun main()
         songs = songFiles,
         port = port,
         host = host,
-        subpath = subpath
+        subpath = subpath,
+        sourceUrl = repoUrl,
+        contactEmail = contactEmail
     )
     webserver.start()
 }
@@ -42,5 +45,6 @@ enum class EnvVar
     REPO_BRANCH,
     HOST,
     PORT,
-    SUBPATH
+    SUBPATH,
+    CONTACT_EMAIL
 }

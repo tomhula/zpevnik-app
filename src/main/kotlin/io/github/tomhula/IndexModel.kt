@@ -2,7 +2,8 @@ package io.github.tomhula
 
 data class IndexModel(
     val songs: List<Song>,
-    val subpath: String
+    val subpath: String,
+    val sourceUrl: String
 )
 {
     data class Song(

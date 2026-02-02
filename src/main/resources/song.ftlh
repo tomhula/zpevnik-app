@@ -50,6 +50,14 @@
                 </a>
             </div>
         </div>
+        
+        <#if contactEmail?has_content>
+            <div class="error-report">
+                <a href="mailto:${contactEmail}?subject=Chyba v písni: ${name}" class="error-link">
+                    Našli jste chybu? Dejte mi vědět!
+                </a>
+            </div>
+        </#if>
     </article>
 </div>
 

@@ -37,6 +37,14 @@
             <li class="song-item">Žádná píseň nebyla nalezena.</li>
         </#list>
     </ul>
+
+    <#if sourceUrl?has_content>
+        <footer class="index-footer">
+            <a href="${sourceUrl}" target="_blank" class="source-link">
+                <i class="fab fa-github"></i> Repositář pro zpěvník
+            </a>
+        </footer>
+    </#if>
 </div>
 
 <script>

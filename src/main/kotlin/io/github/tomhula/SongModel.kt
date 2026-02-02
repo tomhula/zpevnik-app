@@ -6,5 +6,6 @@ data class SongModel(
     val musescoreUrl: String,
     val pdfUrl: String,
     val soundUrl: String,
-    val subpath: String
+    val subpath: String,
+    val contactEmail: String?
 )
