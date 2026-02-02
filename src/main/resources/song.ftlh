@@ -32,7 +32,7 @@
         </div>
 
         <div class="audio-player">
-            <p class="player-helper">Klikněte pro přehrání</p>
+            <p class="player-helper"><i class="fas fa-play-circle"></i> Audio</p>
             <audio controls>
                 <source src="${soundUrl}" type="audio/wav">
                 Váš prohlížeč nepodporuje přehrávání zvuku.
@@ -45,7 +45,7 @@
                 <a href="${musescoreUrl}" class="btn btn-musescore" download title="Stáhnout Musescore soubor">
                     <i class="fas fa-file-audio"></i> <span>Musescore (.mscz)</span>
                 </a>
-                <a href="${pdfUrl}" class="btn btn-pdf" download title="Stáhnout PDF verzi">
+                <a href="${pdfUrl}" class="btn btn-pdf" download title="Stáhnout jako PDF">
                     <i class="fas fa-file-pdf"></i> <span>PDF</span>
                 </a>
             </div>
