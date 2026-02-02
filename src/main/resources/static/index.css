@@ -4,33 +4,54 @@ header {
     z-index: 100;
 }
 
+.toolbar {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    align-items: stretch;
+}
+
 /* Search Bar */
 .search-container {
-    margin-bottom: 20px;
+    position: relative;
+    flex-grow: 1;
+}
+
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
 }
 
 input[type="text"] {
     width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    padding: 12px 15px 12px 45px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
     font-size: 1rem;
     box-sizing: border-box;
-    transition: border-color 0.3s;
+    transition: all 0.3s ease;
+    background: white;
+    box-shadow: var(--shadow);
 }
 
 input[type="text"]:focus {
     outline: none;
     border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.1);
 }
 
 /* Song List */
 .song-list {
     list-style: none;
     padding: 0;
+    margin: 0;
     background: var(--card-bg);
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
     overflow: hidden;
 }
 
@@ -41,12 +62,12 @@ input[type="text"]:focus {
 }
 
 .song-item {
-    padding: 15px 20px;
-    border-bottom: 1px solid #eee;
+    padding: 18px 25px;
+    border-bottom: 1px solid var(--border-color);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background 0.2s;
+    transition: all 0.2s ease;
 }
 
 .song-item:last-child {
@@ -54,28 +75,29 @@ input[type="text"]:focus {
 }
 
 .song-link:hover .song-item {
-    background-color: #fff5eb;
+    background-color: #fffaf5;
 }
 
 .song-info h3 {
     margin: 0;
-    font-size: 1.1rem;
+    font-size: 1.15rem;
     color: var(--primary-color);
-}
-
-.song-info p {
-    margin: 0;
-    font-size: 0.9rem;
-    color: #666;
+    font-weight: 600;
 }
 
 .arrow {
-    color: #ccc;
-    font-size: 1.2rem;
-    transition: transform 0.2s, color 0.2s;
+    color: #cbd5e0;
+    font-size: 1.4rem;
+    transition: all 0.2s ease;
 }
 
 .song-link:hover .arrow {
     color: var(--accent-color);
-    transform: translateX(5px);
+    transform: translateX(4px);
+}
+
+@media (max-width: 600px) {
+    .toolbar {
+        flex-direction: column;
+    }
 }

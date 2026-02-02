@@ -25,8 +25,7 @@ fun main()
         songs = songFiles,
         port = port,
         host = host,
-        subpath = subpath,
-        onRefresh = generator::generate
+        subpath = subpath
     )
     webserver.start()
 }

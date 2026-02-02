@@ -24,7 +24,6 @@ class Webserver(
     private var songs: List<SongFile>,
     private val port: Int,
     private val host: String,
-    private val onRefresh: () -> List<SongFile> = { songs },
     subpath: String
 )
 {
@@ -56,12 +55,6 @@ class Webserver(
 
                 get {
                     call.respond(FreeMarkerContent("index.ftlh", songs.toIndexModel()))
-                }
-                
-                post("/refresh") {
-                    songs = onRefresh()
-                    logger.info { "Refreshed songs: ${songs.joinToString { it.name }}" }
-                    call.respondRedirect("/$normalizedSubpath")
                 }
                 
                 route("/song/{name}") {
