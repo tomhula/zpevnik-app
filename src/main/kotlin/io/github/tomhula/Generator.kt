@@ -21,20 +21,25 @@ class Generator(
     {
         if (outputDir.exists())
             outputDir.forEach { it.deleteRecursively() }
-        val srcDir = outputDir.resolve("src").also { it.createDirectories() }
-        val renderDir = outputDir.resolve("render").also { it.createDirectories() }
+        
+        val srcDir = outputDir.resolve("src")
+        val renderDir = outputDir.resolve("render")
+        srcDir.createDirectories()
+        renderDir.createDirectories()
+        
         cloneRepo(srcDir)
-        val songs = convertDir(srcDir, renderDir)
-        return songs
+        
+        return convertDir(srcDir, renderDir)
     }
-    
+
     private fun cloneRepo(destination: Path)
     {
         destination.createDirectories()
-        val destinationFile = destination.toFile()
-
+        
+        logger.info { "Cloning $repoUrl to $destination" }
+        
         val git = KGit.init {
-            setDirectory(destinationFile)
+            setDirectory(destination.toFile())
         }
 
         git.repository.config.setString("remote", "origin", "url", repoUrl)
@@ -52,7 +57,11 @@ class Generator(
     {
         logger.info { "Running $musescoreExecutable ${args.joinToString(" ")}" }
         val process = ProcessBuilder(musescoreExecutable, *args).start()
-        process.waitFor()
+        
+        val exitCode = process.waitFor()
+        
+        if (exitCode != 0)
+            throw RuntimeException("MuseScore exited with code $exitCode")
     }
 
     private fun convert(input: Path, output: Path)
@@ -60,38 +69,47 @@ class Generator(
         logger.info { "Converting $input to $output" }
         runMusescore(arrayOf("--export-to", output.toString(), input.toString()))
     }
-    
+
     @OptIn(ExperimentalSerializationApi::class)
     private fun convert(job: ConversionJob)
     {
         val jobFile = createTempFile(suffix = ".json")
-        val json = Json.encodeToString(job)
-        logger.info { "Running a conversion job: $json" }
-        jobFile.writeText(json)
-        runMusescore(arrayOf("--job", jobFile.toString()))
+        try
+        {
+            val json = Json.encodeToString(job)
+            logger.info { "Running a conversion job: $json" }
+            jobFile.writeText(json)
+            runMusescore(arrayOf("--job", jobFile.toString()))
+        }
+        finally
+        {
+            jobFile.deleteIfExists()
+        }
     }
 
+    @OptIn(ExperimentalPathApi::class)
     private fun convertDir(inputDir: Path, outputDir: Path): List<SongFile>
     {
-        val songs = mutableListOf<SongFile>()
-        val tasks = mutableSetOf<ConversionJob.Task>()
         val srcFiles = inputDir.walk().filter { it.extension == "mscz" }.toList()
-        
-        srcFiles.forEach { srcFile ->
-            val svg = outputDir.resolve(srcFile.nameWithoutExtension + ".svg")
-            val pdf = outputDir.resolve(srcFile.nameWithoutExtension + ".pdf")
-            tasks.add(ConversionJob.Task(input = srcFile.toString(), output = svg.toString()))
-            tasks.add(ConversionJob.Task(input = srcFile.toString(), output = pdf.toString()))
-        }
-        
+
+        val tasks = srcFiles.flatMap { srcFile ->
+            val svg = outputDir.resolve("${srcFile.nameWithoutExtension}.svg")
+            val pdf = outputDir.resolve("${srcFile.nameWithoutExtension}.pdf")
+            listOf(
+                ConversionJob.Task(input = srcFile.toString(), output = svg.toString()),
+                ConversionJob.Task(input = srcFile.toString(), output = pdf.toString())
+            )
+        }.toSet()
+
         convert(ConversionJob(tasks))
-        
-        srcFiles.forEach { srcFile -> 
-            val pdf = outputDir.resolve(srcFile.nameWithoutExtension + ".pdf")
-            val svgs = outputDir.walk().filter { it.extension == "svg" && it.nameWithoutExtension.startsWith(srcFile.nameWithoutExtension) }.toList()
-            songs.add(SongFile(name = srcFile.nameWithoutExtension, musescore = srcFile, pdf = pdf, images = svgs))
+
+        val allSvgs = outputDir.walk().filter { it.extension == "svg" }.toList()
+
+        return srcFiles.map { srcFile ->
+            val pdf = outputDir.resolve("${srcFile.nameWithoutExtension}.pdf")
+            val svgs = allSvgs.filter { it.nameWithoutExtension.startsWith(srcFile.nameWithoutExtension) }
+            
+            SongFile(name = srcFile.nameWithoutExtension, musescore = srcFile, pdf = pdf, images = svgs)
         }
-        
-        return songs
     }
 }
