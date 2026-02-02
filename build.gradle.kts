@@ -19,7 +19,6 @@ dependencies {
     implementation(libs.kotlinLogging)
     implementation(libs.slf4j.simple)
     implementation(libs.kotlinx.serialization.json)
-    // implementation(libs.logback.classic)
 }
 
 application {
