@@ -43,6 +43,19 @@
     font-style: italic;
 }
 
+/* Audio Player */
+.audio-player {
+    margin: 20px 0;
+    padding: 10px;
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+}
+
+.audio-player audio {
+    width: 100%;
+    max-width: 500px;
+}
+
 /* Image Gallery (Vertical) */
 .notes-gallery {
     display: flex;

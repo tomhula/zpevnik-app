@@ -73,10 +73,13 @@ class Generator(
     @OptIn(ExperimentalSerializationApi::class)
     private fun convert(job: ConversionJob)
     {
+        // https://github.com/musescore/MuseScore/issues/31998
+        val sortedTasks = job.tasks.sortedByDescending { it.output.substringAfterLast('.') }
+        val newJob = ConversionJob(sortedTasks)
         val jobFile = createTempFile(suffix = ".json")
         try
         {
-            val json = Json.encodeToString(job)
+            val json = Json.encodeToString(newJob)
             logger.info { "Running a conversion job: $json" }
             jobFile.writeText(json)
             runMusescore(arrayOf("--job", jobFile.toString()))
@@ -95,21 +98,23 @@ class Generator(
         val tasks = srcFiles.flatMap { srcFile ->
             val svg = outputDir.resolve("${srcFile.nameWithoutExtension}.svg")
             val pdf = outputDir.resolve("${srcFile.nameWithoutExtension}.pdf")
+            val wav = outputDir.resolve("${srcFile.nameWithoutExtension}.wav")
             listOf(
                 ConversionJob.Task(input = srcFile.toString(), output = svg.toString()),
-                ConversionJob.Task(input = srcFile.toString(), output = pdf.toString())
+                ConversionJob.Task(input = srcFile.toString(), output = pdf.toString()),
+                ConversionJob.Task(input = srcFile.toString(), output = wav.toString())
             )
-        }.toSet()
+        }
 
         convert(ConversionJob(tasks))
 
         val allSvgs = outputDir.walk().filter { it.extension == "svg" }.toList()
-
         return srcFiles.map { srcFile ->
             val pdf = outputDir.resolve("${srcFile.nameWithoutExtension}.pdf")
+            val wav = outputDir.resolve("${srcFile.nameWithoutExtension}.wav")
             val svgs = allSvgs.filter { it.nameWithoutExtension.startsWith(srcFile.nameWithoutExtension) }
             
-            SongFile(name = srcFile.nameWithoutExtension, musescore = srcFile, pdf = pdf, images = svgs)
+            SongFile(name = srcFile.nameWithoutExtension, musescore = srcFile, images = svgs, sound = wav, pdf = pdf)
         }
     }
 }

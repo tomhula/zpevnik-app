@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zpěvník</title>
+    <title>Tomův Zpěvník</title>
     <link rel="stylesheet" href="${subpath}/static/styles.css">
     <link rel="stylesheet" href="${subpath}/static/song.css">
 </head>
@@ -26,6 +26,12 @@
             </#list>
         </div>
 
+        <div class="audio-player">
+            <audio controls>
+                <source src="${soundUrl}" type="audio/wav">
+                Váš prohlížeč nepodporuje přehrávání zvuku.
+            </audio>
+        </div>
         <!-- Sekce ke stažení -->
         <div class="download-section">
             <h3>Soubory ke stažení</h3>

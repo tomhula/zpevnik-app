@@ -73,6 +73,7 @@ class Webserver(
                             imageUrls = songFile.images.indices.map { index -> "$normalizedSubpath/song/${songFile.name}/image/$index" },
                             musescoreUrl = "$normalizedSubpath/song/${songFile.name}/musescore",
                             pdfUrl = "$normalizedSubpath/song/${songFile.name}/pdf",
+                            soundUrl = "$normalizedSubpath/song/${songFile.name}/sound",
                             subpath = normalizedSubpath
                         )
                         call.respond(FreeMarkerContent("song.ftlh", model))
@@ -90,6 +91,13 @@ class Webserver(
                         val songFile = songs.find { it.name == name } ?: return@get
                         call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.pdf.name}\"")
                         call.respondPath(songFile.pdf)
+                    }
+
+                    get("/sound") {
+                        val name = call.parameters["name"] ?: return@get
+                        val songFile = songs.find { it.name == name } ?: return@get
+                        call.response.headers.append(HttpHeaders.ContentDisposition, "attachment; filename=\"${songFile.sound.name}\"")
+                        call.respondPath(songFile.sound)
                     }
 
                     get("/image/{index}") {

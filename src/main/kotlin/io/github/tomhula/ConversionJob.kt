@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @JvmInline
 @Serializable
-value class ConversionJob(val tasks: Set<Task>)
+value class ConversionJob(val tasks: List<Task>)
 {
     @Serializable
     data class Task(
