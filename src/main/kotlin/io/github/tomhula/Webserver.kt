@@ -12,8 +12,11 @@ import io.ktor.server.http.content.staticResources
 import io.ktor.server.netty.Netty
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondPath
+import io.ktor.server.response.respondRedirect
 import io.ktor.server.routing.IgnoreTrailingSlash
+import io.ktor.server.routing.RoutingContext
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import kotlin.io.path.name
@@ -24,6 +27,7 @@ class Webserver(
     private val host: String,
     subpath: String,
     private val sourceUrl: String,
+    private val onRefresh: () -> List<SongFile>,
     private val contactEmail: String?
 )
 {
@@ -55,6 +59,17 @@ class Webserver(
 
                 get {
                     call.respond(FreeMarkerContent("index.ftlh", songs.toIndexModel()))
+                }
+                
+                route("/refresh") {
+                    val block: suspend RoutingContext.() -> Unit = {
+                        logger.info { "Refreshing songs" }
+                        songs = onRefresh()
+                        logger.info { "Refreshed songs: ${songs.joinToString { it.name }}" }
+                        call.respondRedirect("/$normalizedSubpath")
+                    }
+                    post(block)
+                    get(block)
                 }
                 
                 route("/song/{name}") {

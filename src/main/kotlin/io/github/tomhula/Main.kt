@@ -28,6 +28,7 @@ fun main()
         host = host,
         subpath = subpath,
         sourceUrl = repoUrl,
+        onRefresh = generator::generate,
         contactEmail = contactEmail
     )
     webserver.start()
