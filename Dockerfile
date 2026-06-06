@@ -3,7 +3,7 @@ WORKDIR /app
 COPY . .
 RUN ./gradlew buildFatJar
 
-FROM musescore:latest
+FROM musescore:4.7.2
 
 WORKDIR /app
 

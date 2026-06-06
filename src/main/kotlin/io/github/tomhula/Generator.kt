@@ -4,6 +4,7 @@ import io.github.oshai.kotlinlogging.KotlinLogging
 import com.github.syari.kgit.KGit
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
+import sun.awt.www.content.audio.wav
 import java.nio.file.Path
 import kotlin.io.path.*
 
@@ -74,7 +75,10 @@ class Generator(
     private fun convert(job: ConversionJob)
     {
         // https://github.com/musescore/MuseScore/issues/31998
-        val sortedTasks = job.tasks.sortedByDescending { it.output.substringAfterLast('.') }
+        val sortedTasks =
+            job.tasks.sortedWith(compareByDescending<ConversionJob.Task> { it.output.endsWith(".mp3") }.thenBy {
+                it.output.substringAfterLast('.')
+            })
         val newJob = ConversionJob(sortedTasks)
         val jobFile = createTempFile(suffix = ".json")
         try
@@ -98,11 +102,11 @@ class Generator(
         val tasks = srcFiles.flatMap { srcFile ->
             val svg = outputDir.resolve("${srcFile.nameWithoutExtension}.svg")
             val pdf = outputDir.resolve("${srcFile.nameWithoutExtension}.pdf")
-            val wav = outputDir.resolve("${srcFile.nameWithoutExtension}.wav")
+            val mp3 = outputDir.resolve("${srcFile.nameWithoutExtension}.mp3")
             listOf(
                 ConversionJob.Task(input = srcFile.toString(), output = svg.toString()),
                 ConversionJob.Task(input = srcFile.toString(), output = pdf.toString()),
-                ConversionJob.Task(input = srcFile.toString(), output = wav.toString())
+                ConversionJob.Task(input = srcFile.toString(), output = mp3.toString())
             )
         }
 
@@ -111,10 +115,10 @@ class Generator(
         val allSvgs = outputDir.walk().filter { it.extension == "svg" }.toList()
         return srcFiles.map { srcFile ->
             val pdf = outputDir.resolve("${srcFile.nameWithoutExtension}.pdf")
-            val wav = outputDir.resolve("${srcFile.nameWithoutExtension}.wav")
+            val mp3 = outputDir.resolve("${srcFile.nameWithoutExtension}.mp3")
             val svgs = allSvgs.filter { it.nameWithoutExtension.startsWith(srcFile.nameWithoutExtension) }
             
-            SongFile(name = srcFile.nameWithoutExtension, musescore = srcFile, images = svgs, sound = wav, pdf = pdf)
+            SongFile(name = srcFile.nameWithoutExtension, musescore = srcFile, images = svgs, sound = mp3, pdf = pdf)
         }
     }
 }

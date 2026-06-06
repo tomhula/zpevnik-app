@@ -13,6 +13,7 @@ RUN set -eux; \
         ca-certificates \
         tini \
         xvfb \
+        dbus \
         libasound2t64 \
         libdbus-1-3 \
         libegl1 \
@@ -34,13 +35,13 @@ RUN set -eux; \
         wget \
     ; \
     # Download and extract to /opt/musescore \
-    wget -q -O /tmp/musescore.AppImage "https://cdn.jsdelivr.net/musescore/v4.6.5/MuseScore-Studio-4.6.5.253511702-x86_64.AppImage"; \
+    wget -q -O /tmp/musescore.AppImage "https://cdn.jsdelivr.net/musescore/v4.7.2/MuseScore-Studio-4.7.2.260525085-x86_64.AppImage"; \
     chmod +x /tmp/musescore.AppImage; \
     /tmp/musescore.AppImage --appimage-extract; \
     mv squashfs-root /opt/musescore; \
     rm -f /tmp/musescore.AppImage; \
     # Create the wrapper script \
-    echo '#!/bin/bash\nxvfb-run -a -- /opt/musescore/AppRun "$@"' > /usr/local/bin/musescore; \
+    echo '#!/bin/bash\ndbus-run-session xvfb-run -a -- /opt/musescore/AppRun "$@"' > /usr/local/bin/musescore; \
     chmod +x /usr/local/bin/musescore; \
     # Cleanup \
     apt-get purge -y --auto-remove wget; \
